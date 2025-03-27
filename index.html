@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Social Media</title>
+    <title>Social Media | 1kosmonavt</title>
     <style>
         body {
             margin: 0;
@@ -17,38 +17,50 @@
             position: absolute;
             top: 0;
             left: 0;
-            z-index: -1;
+            z-index: 0; /* Поднимаем canvas чуть выше, но ниже текста */
         }
         .container {
             position: relative;
-            z-index: 1;
+            z-index: 1; /* Контейнер с текстом поверх всего */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100%;
             color: #fff;
+            padding: 20px;
+            box-sizing: border-box;
         }
         h1 {
-            font-size: 4em;
+            font-size: clamp(2em, 8vw, 4em);
             text-transform: uppercase;
             background: linear-gradient(90deg, #00ffcc, #ff00ff);
             -webkit-background-clip: text;
             color: transparent;
             text-shadow: 0 0 20px rgba(0, 255, 204, 0.8);
             animation: glitch 2s infinite;
+            margin: 0;
+        }
+        h2 {
+            font-size: clamp(1em, 4vw, 1.5em);
+            color: #ff00ff;
+            text-shadow: 0 0 10px rgba(255, 0, 255, 0.8);
+            margin: 10px 0 0;
+            animation: fadeIn 1.5s ease-in-out;
         }
         .social-links {
-            margin-top: 40px;
+            margin-top: 30px;
+            width: 100%;
+            max-width: 300px;
         }
         .button {
             position: relative;
             display: block;
-            width: 250px;
-            margin: 20px;
+            width: 100%;
+            margin: 15px 0;
             padding: 15px;
             text-align: center;
-            font-size: 1.3em;
+            font-size: clamp(1em, 4vw, 1.3em);
             text-decoration: none;
             color: #00ffcc;
             border: 2px solid #ff00ff;
@@ -61,10 +73,10 @@
         .button:before {
             content: '';
             position: absolute;
-            top: -10px;
-            left: -10px;
-            right: -10px;
-            bottom: -10px;
+            top: -8px;
+            left: -8px;
+            right: -8px;
+            bottom: -8px;
             border: 1px solid rgba(255, 0, 255, 0.5);
             border-radius: 15px;
             filter: blur(5px);
@@ -78,13 +90,23 @@
         }
         @keyframes glitch {
             0%, 100% { transform: translate(0); }
-            10%, 30%, 50%, 70% { transform: translate(-5px, 5px); }
-            20%, 40%, 60% { transform: translate(5px, -5px); }
+            10%, 30%, 50%, 70% { transform: translate(-3px, 3px); }
+            20%, 40%, 60% { transform: translate(3px, -3px); }
         }
         @keyframes pulse {
             0% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 0.8; }
             100% { transform: scale(1); opacity: 0.5; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 600px) {
+            .container { padding: 10px; }
+            .social-links { margin-top: 20px; }
+            .button { margin: 10px 0; padding: 12px; }
+            .button:before { top: -6px; left: -6px; right: -6px; bottom: -6px; }
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
@@ -92,14 +114,13 @@
 <body>
     <canvas id="bg"></canvas>
     <div class="container">
-        <h1>Social Media</h1>
-        <h2>Artem (aka-1kosmonavt) </h2>
+        <h1>1kosmonavt</h1>
+        <h2>Artem — Designer from the Void</h2>
         <div class="social-links">
             <a href="https://t.me/kosmik_pp1" class="button">Telegram</a>
             <a href="https://x.com/1kosmonavt_" class="button">Twitter</a>
             <a href="https://www.instagram.com/kosmo_1pp/" class="button">Instagram</a>
-            <a href="https://de.pinterest.com/1kosmonavt_/" class="button">Pinterest</a>
-            <a href="https://www.tiktok.com/@prostochel_pp01" class="button">TikTok</a>
+            <a href="https://open.spotify.com/user/wkc3nix375xu5ydarm412hzed?si=ec675f0e8f5b49da" class="button">Spotify</a>
         </div>
     </div>
     <script>
@@ -108,6 +129,7 @@
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
+        // Фон с частицами
         let particles = [];
         for (let i = 0; i < 100; i++) {
             particles.push({
@@ -118,9 +140,90 @@
             });
         }
 
+        // Звёздный портал
+        let portalParticles = [];
+        const portalRadius = 150;
+        for (let i = 0; i < 300; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const radius = Math.random() * portalRadius;
+            portalParticles.push({
+                x: radius * Math.cos(angle),
+                y: radius * Math.sin(angle),
+                radius: Math.random() * 2 + 1,
+                angle: angle,
+                speed: Math.random() * 0.02 + 0.01,
+                distance: radius
+            });
+        }
+
+        // Шлейф за мышкой
+        let trailParticles = [];
+        let mouseX = canvas.width / 2;
+        let mouseY = canvas.height / 2;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            for (let i = 0; i < 5; i++) {
+                trailParticles.push({
+                    x: mouseX,
+                    y: mouseY,
+                    radius: Math.random() * 3 + 1,
+                    life: 1,
+                    speedX: (Math.random() - 0.5) * 2,
+                    speedY: (Math.random() - 0.5) * 2
+                });
+            }
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            e.preventDefault(); // Предотвращаем прокрутку на мобильных
+            const touch = e.touches[0];
+            mouseX = touch.clientX;
+            mouseY = touch.clientY;
+            for (let i = 0; i < 5; i++) {
+                trailParticles.push({
+                    x: mouseX,
+                    y: mouseY,
+                    radius: Math.random() * 3 + 1,
+                    life: 1,
+                    speedX: (Math.random() - 0.5) * 2,
+                    speedY: (Math.random() - 0.5) * 2
+                });
+            }
+        }, { passive: false });
+
+        // Эффект кликов/тапов
+        let clickParticles = [];
+        document.addEventListener('click', (e) => {
+            createClickEffect(e.clientX, e.clientY);
+        });
+
+        document.addEventListener('touchstart', (e) => {
+            const touch = e.touches[0];
+            createClickEffect(touch.clientX, touch.clientY);
+        });
+
+        function createClickEffect(x, y) {
+            for (let i = 0; i < 20; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 5 + 2;
+                clickParticles.push({
+                    x: x,
+                    y: y,
+                    radius: Math.random() * 3 + 2,
+                    life: 1,
+                    speedX: Math.cos(angle) * speed,
+                    speedY: Math.sin(angle) * speed
+                });
+            }
+        }
+
         function animate() {
             ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Обычные частицы
             ctx.fillStyle = '#00ffcc';
             particles.forEach(p => {
                 ctx.beginPath();
@@ -129,9 +232,59 @@
                 p.y -= p.speed;
                 if (p.y < 0) p.y = canvas.height;
             });
+
+            // Звёздный портал
+            ctx.save();
+            ctx.translate(canvas.width / 2, canvas.height / 2);
+            portalParticles.forEach(p => {
+                p.angle += p.speed;
+                p.x = p.distance * Math.cos(p.angle);
+                p.y = p.distance * Math.sin(p.angle);
+                const distFromCenter = Math.sqrt(p.x * p.x + p.y * p.y);
+                const opacity = 1 - (distFromCenter / portalRadius);
+                ctx.fillStyle = `rgba(255, 0, 255, ${opacity})`;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+                p.distance += 0.5;
+                if (p.distance > portalRadius) p.distance = 0;
+            });
+            ctx.restore();
+
+            // Шлейф за мышкой
+            ctx.fillStyle = 'rgba(0, 255, 204, 0.8)';
+            trailParticles.forEach((p, i) => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+                p.x += p.speedX;
+                p.y += p.speedY;
+                p.life -= 0.05;
+                p.radius *= 0.95;
+                if (p.life <= 0) trailParticles.splice(i, 1);
+            });
+
+            // Эффект кликов
+            ctx.fillStyle = 'rgba(255, 0, 255, 0.8)';
+            clickParticles.forEach((p, i) => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+                p.x += p.speedX;
+                p.y += p.speedY;
+                p.life -= 0.03;
+                p.radius += 0.5;
+                if (p.life <= 0) clickParticles.splice(i, 1);
+            });
+
             requestAnimationFrame(animate);
         }
         animate();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
     </script>
 </body>
 </html>

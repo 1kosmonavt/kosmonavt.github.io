@@ -3,75 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Social media</title>
+    <title>Social Media</title>
     <style>
         body {
             margin: 0;
             padding: 0;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
-            font-family: 'Arial', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            background: #0d0d0d;
+            font-family: 'Orbitron', sans-serif;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
         }
         .container {
-            text-align: center;
-            padding: 40px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            color: #fff;
         }
         h1 {
-            font-size: 3em;
-            color: #fff;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            animation: fadeIn 1.5s ease-in-out;
+            font-size: 4em;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #00ffcc, #ff00ff);
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(0, 255, 204, 0.8);
+            animation: glitch 2s infinite;
         }
         .social-links {
-            margin-top: 30px;
+            margin-top: 40px;
         }
         .button {
+            position: relative;
             display: block;
-            width: 220px;
-            margin: 15px auto;
+            width: 250px;
+            margin: 20px;
             padding: 15px;
-            background: linear-gradient(45deg, #ff9f1c, #ff006e);
-            color: #fff;
+            text-align: center;
+            font-size: 1.3em;
             text-decoration: none;
-            font-size: 1.2em;
-            border-radius: 50px;
-            transition: transform 0.3s, box-shadow 0.3s;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            color: #00ffcc;
+            border: 2px solid #ff00ff;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            transition: all 0.3s;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        .button:before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border: 1px solid rgba(255, 0, 255, 0.5);
+            border-radius: 15px;
+            filter: blur(5px);
+            z-index: -1;
+            animation: pulse 3s infinite;
         }
         .button:hover {
-            transform: scale(1.1) rotate(2deg);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+            transform: translateZ(20px) rotateX(10deg);
+            box-shadow: 0 0 30px #ff00ff;
+            color: #fff;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes glitch {
+            0%, 100% { transform: translate(0); }
+            10%, 30%, 50%, 70% { transform: translate(-5px, 5px); }
+            20%, 40%, 60% { transform: translate(5px, -5px); }
         }
-        .button:nth-child(1) { animation: slideIn 0.5s ease-out 0.2s both; }
-        .button:nth-child(2) { animation: slideIn 0.5s ease-out 0.4s both; }
-        .button:nth-child(3) { animation: slideIn 0.5s ease-out 0.6s both; }
-        .button:nth-child(4) { animation: slideIn 0.5s ease-out 0.8s both; }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-50px); }
-            to { opacity: 1; transform: translateX(0); }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 0.5; }
         }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <canvas id="bg"></canvas>
     <div class="container">
-        <h1>Me and my social networks</h1>
+        <h1>Social Media</h1>
+        <h2>Artem (aka-1kosmonavt) </h2>
         <div class="social-links">
+            <a href="https://t.me/kosmik_pp1" class="button">Telegram</a>
             <a href="https://x.com/1kosmonavt_" class="button">Twitter</a>
             <a href="https://www.instagram.com/kosmo_1pp/" class="button">Instagram</a>
             <a href="https://de.pinterest.com/1kosmonavt_/" class="button">Pinterest</a>
             <a href="https://www.tiktok.com/@prostochel_pp01" class="button">TikTok</a>
         </div>
     </div>
+    <script>
+        const canvas = document.getElementById('bg');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particles = [];
+        for (let i = 0; i < 100; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 2 + 1,
+                speed: Math.random() * 1 + 0.5
+            });
+        }
+
+        function animate() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#00ffcc';
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+                p.y -= p.speed;
+                if (p.y < 0) p.y = canvas.height;
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
 </body>
 </html>
